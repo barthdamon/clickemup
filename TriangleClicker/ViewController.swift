@@ -22,7 +22,7 @@ class ViewController: UIViewController {
   enum CCs: Double {
     case Up = 225.0
     case Down = 45.0
-    case Right = 325.0
+    case Right = 315.0
     case Left = 135.0
   }
   enum SelectedSet: String {
