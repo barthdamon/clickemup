@@ -37,10 +37,10 @@ class ViewController: UIViewController {
   let standardHeight: CGFloat = 50
   
   //Hardcoded Data Sets
-  let rightFacingSet: [(x: CGFloat, y: CGFloat)] = [(x: 200 , y: 200), (x: 150, y: 150), (x: 100, y: 100), (x: 150, y: 250), (x: 100, y: 300)]
-  let upFacingSet: [(x: CGFloat, y: CGFloat)] = [(x: 200 , y: 100), (x: 150, y: 150), (x: 100, y: 200), (x: 250, y: 150), (x: 300, y: 200)]
-  let leftFacingSet: [(x: CGFloat, y: CGFloat)] = [(x: 100 , y: 200), (x: 150, y: 150), (x: 200, y: 100), (x: 150, y: 250), (x: 200, y: 300)]
-  let downFacingSet: [(x: CGFloat, y: CGFloat)] = [(x: 200 , y: 300), (x: 150, y: 250), (x: 100, y: 200), (x: 250, y: 250), (x: 300, y: 200)]
+  let rightFacingSet: [(x: CGFloat, y: CGFloat)] = [(x: 150 , y: 150), (x: 100, y: 100), (x: 50, y: 50), (x: 100, y: 200), (x: 50, y: 250)]
+  let upFacingSet: [(x: CGFloat, y: CGFloat)] = [(x: 150 , y: 50), (x: 100, y: 100), (x: 50, y: 150), (x: 200, y: 100), (x: 250, y: 150)]
+  let leftFacingSet: [(x: CGFloat, y: CGFloat)] = [(x: 50 , y: 150), (x: 100, y: 100), (x: 150, y: 50), (x: 100, y: 200), (x: 150, y: 250)]
+  let downFacingSet: [(x: CGFloat, y: CGFloat)] = [(x: 150 , y: 250), (x: 100, y: 200), (x: 50, y: 150), (x: 200, y: 200), (x: 250, y: 150)]
   
   //LiveData
   var sets: Array<CoordinateArray>?
@@ -68,9 +68,6 @@ class ViewController: UIViewController {
         setSelectedSet(rand)
         drawTriangles(randomSet)
       }
-    } else {
-      self.timeLabel.text = "GAME OVER"
-      self.startButton.hidden = false
     }
   }
   
@@ -108,20 +105,23 @@ class ViewController: UIViewController {
   }
   
   @IBAction func startButtonPressed(sender: AnyObject) {
+    self.scoreLabel.text = "0"
+    self.score = 0
     self.gameOver = false
     selectRandomSet()
     self.startButton.hidden = true
     self.time = 15
+    self.timeLabel.text = String(time)
     timer = NSTimer()
     timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "tickTock", userInfo: nil, repeats: true)
   }
   
   func transitionToNewTriangles() {
-    UIView.animateWithDuration(0.1, animations: { () -> Void in
+    UIView.animateWithDuration(0.15, animations: { () -> Void in
       self.objectView.alpha = 0
       }, completion: { (complete) -> Void in
         self.selectRandomSet()
-        UIView.animateWithDuration(0.1, animations: { () -> Void in
+        UIView.animateWithDuration(0.15, animations: { () -> Void in
           self.objectView.alpha = 1
         })
     })
@@ -133,6 +133,9 @@ class ViewController: UIViewController {
     if time == 0 {
       timer?.invalidate()
       gameOver = true
+      self.startButton.hidden = false
+      removeAllTriangles()
+      self.timeLabel.text = "GAME OVER"
     }
   }
   
@@ -158,7 +161,6 @@ class ViewController: UIViewController {
     }
     //3: rotate
     rotateTriangles()
-    //code
   }
   
   func rotateTriangles() {
@@ -202,7 +204,7 @@ class ViewController: UIViewController {
   }
   
   func generateView(coords: Coordinates) -> UIView {
-    let view = UIView(frame: CGRectMake(coords.x, coords.y, 50, 50))
+    let view = UIView(frame: CGRectMake(coords.x, coords.y, standardHeight, standardWidth))
     view.backgroundColor = UIColor.blackColor()
     let tapRecognizer = UITapGestureRecognizer(target: self, action: "triangleTapped:")
     tapRecognizer.numberOfTapsRequired = 1
